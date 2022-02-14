@@ -8,7 +8,7 @@ $code = uniqid();
 $query = $database->prepare('INSERT INTO urls (code, target) VALUES (:code, :target)');
 $query->execute([
 	':code' => $code,
-	':target' => $_GET['target'],
+	':target' => htmlspecialchars(filter_var($_GET['target'], FILTER_SANITIZE_URL), ENT_QUOTES, 'UTF-8'),
 ]);
 
 

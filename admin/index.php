@@ -15,12 +15,30 @@ if (isset($_GET['logout'])) {
 
 if (isset($_POST['username']) && isset($_POST['password'])) {
 
-	$login = $_POST['username'];
-	$hashedPassword = md5($_POST['password']);
 
-	$sql = "select * from users where login = '$login' and password = '$hashedPassword'";
-	$query = $database->query($sql, PDO::FETCH_ASSOC);
-	$users = $query->fetchAll();
+	// $sql = "select * from users where login = '$login' and password = '$hashedPassword'";
+	// $query = $database->query($sql, PDO::FETCH_ASSOC);
+	// $users = $query->fetchAll();
+
+	// $login = $_POST['username'];
+	// $hashedPassword = md5($_POST['password']);
+
+	// $query = $database->prepare("SELECT * FROM users WHERE login = :login AND password = :hashedPassword");
+	// $query->bindParam(':login', $login, PDO::PARAM_STR);
+	// $query->bindParam(':hashedPassword', $hashedPassword, PDO::PARAM_STR);
+	// $query->execute();
+
+	$query = $database->prepare("SELECT * FROM users WHERE login = :login AND password = :hashedPassword");
+	$query->execute(array(
+		'login' => $_POST['username'],
+		'hashedPassword' => $hashedPassword = md5($_POST['password']) 
+	));
+	$users = $query->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
+
 
 	if (isset($users[0])) {
 		$_SESSION['user'] = $users[0];
@@ -35,7 +53,6 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,200&display=swap" rel="stylesheet">
 	<style>
-		
 		* {
 			margin: 0;
 			padding: 0;
